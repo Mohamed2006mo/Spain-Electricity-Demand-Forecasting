@@ -4,12 +4,21 @@ import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
+from pathlib import Path
+
+# -----------------------------
+# Resolve absolute paths for deployment
+# -----------------------------
+# __file__ is App/app.py. .parent is App/. .parent.parent is the repo root.
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / 'NoteBooks' / 'random_forest_model.pkl'
+FEATURES_PATH = BASE_DIR / 'NoteBooks' / 'feature_columns.pkl'
 
 # -----------------------------
 # Load model and feature list
 # -----------------------------
-model = joblib.load('NoteBooks/random_forest_model.pkl')
-feature_columns = joblib.load('NoteBooks/feature_columns.pkl')
+model = joblib.load(MODEL_PATH)
+feature_columns = joblib.load(FEATURES_PATH)
 
 st.set_page_config(page_title="Spain Electricity Load Predictor", layout="wide", page_icon="⚡")
 
