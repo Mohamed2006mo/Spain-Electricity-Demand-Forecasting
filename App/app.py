@@ -11,8 +11,8 @@ from pathlib import Path
 # -----------------------------
 # __file__ is App/app.py. .parent is App/. .parent.parent is the repo root.
 BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / 'NoteBooks' / 'random_forest_model.pkl'
-FEATURES_PATH = BASE_DIR / 'NoteBooks' / 'feature_columns.pkl'
+MODEL_PATH = BASE_DIR / "Notebooks" / "random_forest_model.pkl"
+FEATURES_PATH = BASE_DIR / "Notebooks" / "feature_columns.pkl"
 
 # -----------------------------
 # Load model and feature list
@@ -20,7 +20,9 @@ FEATURES_PATH = BASE_DIR / 'NoteBooks' / 'feature_columns.pkl'
 model = joblib.load(MODEL_PATH)
 feature_columns = joblib.load(FEATURES_PATH)
 
-st.set_page_config(page_title="Spain Electricity Load Predictor", layout="wide", page_icon="⚡")
+st.set_page_config(
+    page_title="Spain Electricity Load Predictor", layout="wide", page_icon="⚡"
+)
 
 # -----------------------------
 # Global styling
@@ -52,7 +54,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 st.markdown(
@@ -65,7 +67,7 @@ st.markdown(
         </p>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 kcol1, kcol2, kcol3, kcol4 = st.columns(4)
@@ -84,7 +86,7 @@ with st.sidebar:
     page = st.radio(
         "Go to",
         ["🔮 Predict", "📈 Model Insights", "ℹ️ About"],
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
     st.divider()
     st.caption("Graduation Project — Optical Soft")
@@ -103,21 +105,44 @@ if page == "🔮 Predict":
             "Month",
             options=list(range(1, 13)),
             value=6,
-            format_func=lambda m: ["Jan","Feb","Mar","Apr","May","Jun",
-                                    "Jul","Aug","Sep","Oct","Nov","Dec"][m-1]
+            format_func=lambda m: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ][m - 1],
         )
     with tcol3:
         day_of_week = st.selectbox(
             "Day of week",
-            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ],
         )
 
     is_weekend_flag = day_of_week in ["Saturday", "Sunday"]
     daypart = (
-        "🌙 Night" if hour < 6 else
-        "🌅 Morning" if hour < 12 else
-        "☀️ Afternoon" if hour < 18 else
-        "🌆 Evening"
+        "🌙 Night"
+        if hour < 6
+        else "🌅 Morning"
+        if hour < 12
+        else "☀️ Afternoon"
+        if hour < 18
+        else "🌆 Evening"
     )
     st.caption(f"{daypart} · {'🏖️ Weekend' if is_weekend_flag else '💼 Weekday'}")
 
@@ -137,7 +162,16 @@ if page == "🔮 Predict":
         clouds_all_mean = st.slider("Average cloud cover (%)", 0.0, 100.0, 30.0)
         weather_main = st.selectbox(
             "Dominant weather condition",
-            ["clear", "clouds", "rain", "drizzle", "fog", "haze", "mist", "thunderstorm"]
+            [
+                "clear",
+                "clouds",
+                "rain",
+                "drizzle",
+                "fog",
+                "haze",
+                "mist",
+                "thunderstorm",
+            ],
         )
 
     with st.expander("🌧️ Precipitation details (optional)"):
@@ -156,9 +190,13 @@ if page == "🔮 Predict":
         )
         fcol1, fcol2, fcol3 = st.columns(3)
         with fcol1:
-            forecast_solar = st.slider("Forecast solar generation (MW)", 0.0, 6000.0, 1000.0)
+            forecast_solar = st.slider(
+                "Forecast solar generation (MW)", 0.0, 6000.0, 1000.0
+            )
         with fcol2:
-            forecast_wind = st.slider("Forecast wind onshore generation (MW)", 0.0, 17500.0, 5000.0)
+            forecast_wind = st.slider(
+                "Forecast wind onshore generation (MW)", 0.0, 17500.0, 5000.0
+            )
         with fcol3:
             price_day_ahead = st.slider("Day-ahead price (€/MWh)", 0.0, 110.0, 55.0)
 
@@ -168,35 +206,37 @@ if page == "🔮 Predict":
     def build_input_row():
         row = {col: 0 for col in feature_columns}
 
-        row['forecast solar day ahead'] = forecast_solar
-        row['forecast wind onshore day ahead'] = forecast_wind
-        row['price day ahead'] = price_day_ahead
-        row['month'] = month
-        row['temp_mean'] = temp_mean
-        row['temp_std'] = temp_std
-        row['pressure_mean'] = pressure_mean
-        row['humidity_mean'] = humidity_mean
-        row['wind_speed_mean'] = wind_speed_mean
-        row['wind_deg_mean'] = wind_deg_mean
-        row['rain_1h_mean'] = rain_1h_mean
-        row['rain_3h_mean'] = rain_3h_mean
-        row['snow_3h_mean'] = snow_3h_mean
-        row['clouds_all_mean'] = clouds_all_mean
-        row['hour'] = hour
-        row['is_weekend'] = 1 if is_weekend_flag else 0
+        row["forecast solar day ahead"] = forecast_solar
+        row["forecast wind onshore day ahead"] = forecast_wind
+        row["price day ahead"] = price_day_ahead
+        row["month"] = month
+        row["temp_mean"] = temp_mean
+        row["temp_std"] = temp_std
+        row["pressure_mean"] = pressure_mean
+        row["humidity_mean"] = humidity_mean
+        row["wind_speed_mean"] = wind_speed_mean
+        row["wind_deg_mean"] = wind_deg_mean
+        row["rain_1h_mean"] = rain_1h_mean
+        row["rain_3h_mean"] = rain_3h_mean
+        row["snow_3h_mean"] = snow_3h_mean
+        row["clouds_all_mean"] = clouds_all_mean
+        row["hour"] = hour
+        row["is_weekend"] = 1 if is_weekend_flag else 0
 
-        day_col = f'day_of_week_{day_of_week}'
+        day_col = f"day_of_week_{day_of_week}"
         if day_col in row:
             row[day_col] = 1
 
-        weather_col = f'weather_main_mode_{weather_main}'
+        weather_col = f"weather_main_mode_{weather_main}"
         if weather_col in row:
             row[weather_col] = 1
 
         return pd.DataFrame([row])[feature_columns]
 
     st.divider()
-    predict_clicked = st.button("🔮 Predict Demand", use_container_width=True, type="primary")
+    predict_clicked = st.button(
+        "🔮 Predict Demand", use_container_width=True, type="primary"
+    )
 
     if predict_clicked:
         input_df = build_input_row()
@@ -216,34 +256,40 @@ if page == "🔮 Predict":
                 st.success("✅ Moderate, typical demand level")
 
         with rcol2:
-            fig = go.Figure(go.Indicator(
-                mode="gauge+number",
-                value=prediction,
-                title={'text': "Predicted Load (MW)"},
-                number={'font': {'color': '#7fd8ff'}},
-                gauge={
-                    'axis': {'range': [15000, 42000]},
-                    'bar': {'color': "#3fa9f5"},
-                    'bgcolor': "rgba(0,0,0,0)",
-                    'steps': [
-                        {'range': [15000, 24000], 'color': "#12293a"},
-                        {'range': [24000, 32000], 'color': "#1c4a63"},
-                        {'range': [32000, 42000], 'color': "#2874a6"},
-                    ],
-                }
-            ))
+            fig = go.Figure(
+                go.Indicator(
+                    mode="gauge+number",
+                    value=prediction,
+                    title={"text": "Predicted Load (MW)"},
+                    number={"font": {"color": "#7fd8ff"}},
+                    gauge={
+                        "axis": {"range": [15000, 42000]},
+                        "bar": {"color": "#3fa9f5"},
+                        "bgcolor": "rgba(0,0,0,0)",
+                        "steps": [
+                            {"range": [15000, 24000], "color": "#12293a"},
+                            {"range": [24000, 32000], "color": "#1c4a63"},
+                            {"range": [32000, 42000], "color": "#2874a6"},
+                        ],
+                    },
+                )
+            )
             fig.update_layout(
-                height=280, margin=dict(l=20, r=20, t=40, b=20),
-                paper_bgcolor="rgba(0,0,0,0)", font={'color': "white"}
+                height=280,
+                margin=dict(l=20, r=20, t=40, b=20),
+                paper_bgcolor="rgba(0,0,0,0)",
+                font={"color": "white"},
             )
             st.plotly_chart(fig, use_container_width=True)
 
         if len(st.session_state["history"]) > 1:
             st.subheader("📊 Your Predictions This Session")
-            hist_df = pd.DataFrame({
-                "Prediction #": range(1, len(st.session_state["history"]) + 1),
-                "Predicted Load (MW)": st.session_state["history"]
-            })
+            hist_df = pd.DataFrame(
+                {
+                    "Prediction #": range(1, len(st.session_state["history"]) + 1),
+                    "Predicted Load (MW)": st.session_state["history"],
+                }
+            )
             st.line_chart(hist_df.set_index("Prediction #"))
 
 # =========================================================
@@ -253,37 +299,52 @@ elif page == "📈 Model Insights":
     st.header("Model Insights")
 
     st.subheader("Feature Importance")
-    st.caption("Which inputs matter most to the model's predictions, based on Random Forest's built-in importance scores.")
+    st.caption(
+        "Which inputs matter most to the model's predictions, based on Random Forest's built-in importance scores."
+    )
 
-    importances = pd.DataFrame({
-        "Feature": feature_columns,
-        "Importance": model.feature_importances_
-    }).sort_values("Importance", ascending=False).head(15)
+    importances = (
+        pd.DataFrame(
+            {"Feature": feature_columns, "Importance": model.feature_importances_}
+        )
+        .sort_values("Importance", ascending=False)
+        .head(15)
+    )
 
     fig_imp = px.bar(
         importances.sort_values("Importance"),
-        x="Importance", y="Feature", orientation="h",
-        color="Importance", color_continuous_scale="Blues"
+        x="Importance",
+        y="Feature",
+        orientation="h",
+        color="Importance",
+        color_continuous_scale="Blues",
     )
     fig_imp.update_layout(
-        height=500, showlegend=False, coloraxis_showscale=False,
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': 'white'}
+        height=500,
+        showlegend=False,
+        coloraxis_showscale=False,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font={"color": "white"},
     )
     st.plotly_chart(fig_imp, use_container_width=True)
 
     st.divider()
 
     st.subheader("Model Performance Summary")
-    perf_df = pd.DataFrame({
-        "Model": ["Random Forest", "Gradient Boosting", "XGBoost", "KNN"],
-        "RMSE": [2320.06, 2338.75, 2392.11, 3330.26],
-        "MAE": [1716.80, 1794.48, 1789.76, 2570.65],
-        "R²": [0.7600, 0.7530, 0.7416, 0.4993],
-        "MAPE (%)": [6.07, 6.36, 6.30, 8.94],
-    })
+    perf_df = pd.DataFrame(
+        {
+            "Model": ["Random Forest", "Gradient Boosting", "XGBoost", "KNN"],
+            "RMSE": [2320.06, 2338.75, 2392.11, 3330.26],
+            "MAE": [1716.80, 1794.48, 1789.76, 2570.65],
+            "R²": [0.7600, 0.7530, 0.7416, 0.4993],
+            "MAPE (%)": [6.07, 6.36, 6.30, 8.94],
+        }
+    )
     st.dataframe(perf_df, use_container_width=True, hide_index=True)
-    st.caption("Validation set results. Random Forest was selected as the final deployed model.")
+    st.caption(
+        "Validation set results. Random Forest was selected as the final deployed model."
+    )
 
     st.subheader("Final Test Set Performance (Random Forest)")
     tcol1, tcol2, tcol3, tcol4 = st.columns(4)
